@@ -69,8 +69,7 @@ try {
     if (!validPassword) {
         throw new badrequest("Wrong password", 401);
     }
-
-    const token = jwt.sign({ id: user._id, role: user.role,uid:user.uid }, process.env.JWT_TOKEN, { expiresIn: "365d" });
+    const token = jwt.sign({ id: user._id, role: user.role,uid:user.uid}, process.env.JWT_TOKEN, { expiresIn: "365d" });
     res.status(200).json({ token, user });
 } catch (err) {
     next(err); 
