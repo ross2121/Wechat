@@ -1,28 +1,5 @@
 import mongoose from "mongoose";
 
-const MessageSchema = new mongoose.Schema({
-    senderUid: {
-        type: String,
-        required: true,
-    },
-    receiverUid: {
-        type: String,
-        required: true,
-    },
-    sendermessages: [
-        {
-            type: String,
-            // required: true,
-        }
-    ],
-    receivermessages: [
-        {
-            type: String,
-            // required: true,
-        }
-    ]
-}, { timestamps: true });
-
 const CustomerSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -70,7 +47,22 @@ const CustomerSchema = new mongoose.Schema({
         default: "Customer",
         immutable: true,
     },
-    messages: [MessageSchema]  
+    messages: [{
+        senderUid: {
+            type: String,
+            required: true,
+        },
+        receiverUid: {
+            type: String,
+            required: true,
+        },
+        sendermessages: {
+            type: [String],
+        },
+        receivermessages: {
+            type: [String],
+        }
+    }]
 }, { timestamps: true });
 
 export default mongoose.model('Customer', CustomerSchema);
