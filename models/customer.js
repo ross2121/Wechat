@@ -47,22 +47,7 @@ const CustomerSchema = new mongoose.Schema({
         default: "Customer",
         immutable: true,
     },
-    messages: [{
-        senderUid: {
-            type: String,
-            required: true,
-        },
-        receiverUid: {
-            type: String,
-            required: true,
-        },
-        sendermessages: {
-            type: [String],
-        },
-        receivermessages: {
-            type: [String],
-        }
-    }]
+   
 }, { timestamps: true });
 
 export default mongoose.model('Customer', CustomerSchema);

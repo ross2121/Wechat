@@ -70,7 +70,7 @@ try {
         throw new badrequest("Wrong password", 401);
     }
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_TOKEN, { expiresIn: "365d" });
+    const token = jwt.sign({ id: user._id, role: user.role,uid:user.uid }, process.env.JWT_TOKEN, { expiresIn: "365d" });
     res.status(200).json({ token, user });
 } catch (err) {
     next(err); 
@@ -198,13 +198,11 @@ export const verifyotp = async (req, res, next) => {
         if (parseInt(code) === parseInt(req.app.locals.OTP)) {
             req.app.locals.OTP = null;
             req.app.locals.resetSession = true;
-        
             const salt = bcrypt.genSaltSync(10);
             const hashedPassword = bcrypt.hashSync(password, salt);           
             const newUser = new Customer({ name, email, password: hashedPassword,uid:uid(),keypair:keypair.toString(),publickey:publickey,privatekey:privatekey});
             await newUser.save();
-
-            const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_TOKEN, { expiresIn: "365d" });
+            const token = jwt.sign({ id: newUser._id, role: newUser.role,uid:uid }, process.env.JWT_TOKEN, { expiresIn: "365d" });
 
             res.status(200).json({ token, user: newUser });
         } else {
@@ -217,13 +215,7 @@ export const verifyotp = async (req, res, next) => {
     }
 };
 
-export const createResetSession=async(req,res,next)=>{
-    if(req.app.locals.resetSession){
-        req.app.locals.resetSession=false
-        return res.status(200).send({message:"Access granted"})
-    }
-    return res.status(400).send({message:"Session expired"})
-}
+
 export const finduserbyemail=async(req,res,next)=>{
     const {email}=req.query;
     try {
