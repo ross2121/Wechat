@@ -1,5 +1,5 @@
 import express from "express";
-import { Register,Login,logout,generaotp,googleAuthSignIn,verifyotp,resetpassword,finduserbyemail,privateKey,publickey} from "../controllers/auth.js";
+import { Register,Login,logout,generaotp,googleAuthSignIn,verifyotp,resetpassword,finduserbyemail,privateKey,publickey,uid} from "../controllers/auth.js";
 // import { auth} from "../middleware/auth.js";
 const router=express.Router();
 router.post("/signup", Register, async (req, res, next) => {
@@ -20,6 +20,7 @@ router.get("/generateotp",generaotp);
 router.post("/verifyotp",verifyotp);
 router.get("/privatekey/:id",privateKey)
 router.get("/publickey/:id",publickey)
+router.get("/UID/:id",uid);
 // router.patch("/updateuser/:id",[auth],updateProfile);
 // router.delete("/deleteprofile/:id",[auth],deleteProfile);
 

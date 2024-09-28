@@ -198,11 +198,12 @@ export const verifyotp = async (req, res, next) => {
         if (parseInt(code) === parseInt(req.app.locals.OTP)) {
             req.app.locals.OTP = null;
             req.app.locals.resetSession = true;
+            const UID=uid();
             const salt = bcrypt.genSaltSync(10);
             const hashedPassword = bcrypt.hashSync(password, salt);           
-            const newUser = new Customer({ name, email, password: hashedPassword,uid:uid(),keypair:keypair.toString(),publickey:publickey,privatekey:privatekey});
+            const newUser = new Customer({ name, email, password: hashedPassword,uid:UID,keypair:keypair.toString(),publickey:publickey,privatekey:privatekey});
             await newUser.save();
-            const token = jwt.sign({ id: newUser._id, role: newUser.role,uid:uid }, process.env.JWT_TOKEN, { expiresIn: "365d" });
+            const token = jwt.sign({ id: newUser._id, role: newUser.role,uid:UID }, process.env.JWT_TOKEN, { expiresIn: "365d" });
 
             res.status(200).json({ token, user: newUser });
         } else {
@@ -285,4 +286,19 @@ export const publickey = async (req, res, next) => {
         next(error);
     }
 };
+export const uid=async(req,res,next)=>{
+    try {
+        const UID = req.params.id;
+        const User = await Customer.findOne({ uid: UID });
+        if (!User) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        if (!User.publickey) {
+            return res.status(404).json({ message: "Public key not found for this user" });
+        }
+        return res.status(200).json(User.name);
+    } catch (error) {
+        next(error);
+    }
+}
 
