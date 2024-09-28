@@ -286,7 +286,7 @@ export const publickey = async (req, res, next) => {
         next(error);
     }
 };
-export const uid=async(req,res,next)=>{
+export const FINDUID=async(req,res,next)=>{
     try {
         const UID = req.params.id;
         const User = await Customer.findOne({ uid: UID });
